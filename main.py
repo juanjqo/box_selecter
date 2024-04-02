@@ -97,13 +97,14 @@ class Annotate(object):
                 else:
                     self.counter_saves_per_image = 1
                     self.previous_ind = self.ind
-                print(f"Image {self.counter_saves_per_image} from {self.image_list[self.ind]} can be saved.")
+
 
                 # Save image
                 img = Image.open(self.image_list[self.ind])
                 img_cropped = img.crop(img_area)
                 new_name = self.image_list[self.ind][:-4] + "_" + str(self.counter_saves_per_image) + ".JPG"
                 img_cropped.save(new_name)
+                print(f"Image {self.counter_saves_per_image} from {self.image_list[self.ind]} was saved as {new_name}.")
                 #img_cropped.show()
                 self.coords = []
 
