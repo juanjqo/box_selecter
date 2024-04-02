@@ -17,8 +17,12 @@ class Annotate(object):
         self.ax.add_patch(self.rect)
         self.ax.figure.canvas.mpl_connect('button_press_event', self.on_press)
         self.ax.figure.canvas.mpl_connect('button_release_event', self.on_release)
-        self.ind = 0
+        self.ind = -1
         self.image_list = image_list
+        self.coords = []
+        self.point1 = []
+        self.point2 = []
+        self.capture_flag = True
 
     def get_figure(self):
         return self.ax.figure
@@ -28,13 +32,26 @@ class Annotate(object):
         self.x0 = event.xdata
         self.y0 = event.ydata
 
+        if self.capture_flag == True:
+            self.point1 = [self.x0, self.y0]
+
+
+        print(f'x0: {self.x0}, y0: {self.y0}')
+
     def on_release(self, event):
         print('release')
         self.x1 = event.xdata
         self.y1 = event.ydata
+
+        if self.capture_flag == True:
+            self.point2 = [self.x1, self.y1]
+            self.capture_flag = False
+
+        print(f'x1: {self.x1}, y1: {self.y1}')
         self.rect.set_width(self.x1 - self.x0)
         self.rect.set_height(self.y1 - self.y0)
         self.rect.set_xy((self.x0, self.y0))
+        self.coords = [self.x0, self.y0, self.x1, self.y1]
         self.rect.set_fill(False)
         self.rect.set_edgecolor('red')
         self.rect.set_linewidth(2)
@@ -50,6 +67,7 @@ class Annotate(object):
         #print(f"coord: {coords}")
         image = Image.open(self.image_list[self.ind])
         self.ax.imshow(image)
+        self.ax.set_title(self.image_list[self.ind], loc='center', fontstyle='oblique', fontsize='medium')
         plt.show()
         #plt.imshow(image)
 
@@ -62,11 +80,14 @@ class Annotate(object):
         print(f"index: {self.ind}")
         #print(f"coord: {coords}")
         image = Image.open(self.image_list[self.ind])
+        self.ax.set_title(self.image_list[self.ind], loc='center', fontstyle='oblique', fontsize='medium')
         self.ax.imshow(image)
         plt.show()
 
     def test(self, event):
-        print(f"Coords: {self.rect.get_width()}, ")
+        print(f"Coords: {[self.x0, self.y0, self.x1, self.y1]}, ")
+        print(f"point1: {self.point1}, point2; {self.point2}")
+        self.capture_flag = True
 
 
 def main() -> None:
