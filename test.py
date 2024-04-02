@@ -28,7 +28,6 @@ class Annotate(object):
         return self.ax.figure
 
     def on_press(self, event):
-        print('press')
         self.x0 = event.xdata
         self.y0 = event.ydata
 
@@ -36,18 +35,17 @@ class Annotate(object):
             self.point1 = [self.x0, self.y0]
 
 
-        print(f'x0: {self.x0}, y0: {self.y0}')
+        print(f'press. x0: {self.x0}, y0: {self.y0}')
 
     def on_release(self, event):
-        print('release')
         self.x1 = event.xdata
         self.y1 = event.ydata
 
         if self.capture_flag == True:
             self.point2 = [self.x1, self.y1]
-            self.capture_flag = False
+            #self.capture_flag = False
 
-        print(f'x1: {self.x1}, y1: {self.y1}')
+        print(f'release. x1: {self.x1}, y1: {self.y1}')
         self.rect.set_width(self.x1 - self.x0)
         self.rect.set_height(self.y1 - self.y0)
         self.rect.set_xy((self.x0, self.y0))
@@ -59,10 +57,6 @@ class Annotate(object):
 
     def next(self, event):
         self.ind += 1
-        #i = self.ind % len(freqs)
-        #ydata = np.sin(2*np.pi*freqs[i]*t)
-        #l.set_ydata(ydata)
-        #plt.draw()
         print(f"index: {self.ind}")
         #print(f"coord: {coords}")
         image = Image.open(self.image_list[self.ind])
@@ -73,10 +67,6 @@ class Annotate(object):
 
     def prev(self, event):
         self.ind -= 1
-        #i = self.ind % len(freqs)
-        #ydata = np.sin(2*np.pi*freqs[i]*t)
-        #l.set_ydata(ydata)
-        #plt.draw()
         print(f"index: {self.ind}")
         #print(f"coord: {coords}")
         image = Image.open(self.image_list[self.ind])
