@@ -19,14 +19,21 @@ class Annotate(object):
         self.ax.add_patch(self.rect)
         self.ax.figure.canvas.mpl_connect('button_press_event', self.on_press)
         self.ax.figure.canvas.mpl_connect('button_release_event', self.on_release)
-        self.ind = -1
+        self.ind = 0
         self.previous_ind = -1
         self.image_list = image_list
         self.coords = []
         self.area = 0
         self.area_threshold = 100
         self.counter_saves_per_image = 0
-        self.reduce_factor = 0
+        self.reduce_factor = 10
+        self.img = self.ax.imshow(self.get_resized_image_from_index(0))
+        self.ax.set_title(self.image_list[self.ind], loc='center', fontstyle='oblique', fontsize='medium')
+
+    def get_resized_image_from_index(self, index):
+        image = Image.open(self.image_list[index])
+        new_size = (int((1 / self.reduce_factor) * image.size[0]), int((1 / self.reduce_factor) * image.size[1]))
+        return image.resize(new_size, Image.Resampling.LANCZOS)
 
     def get_figure(self):
         return self.ax.figure
@@ -55,24 +62,17 @@ class Annotate(object):
     def next(self, event):
         self.previous_ind = self.ind
         self.ind += 1
-
-        #print(f"index: {self.ind}")
-        image = Image.open(self.image_list[self.ind])
-        self.plt.cla()
-        time.sleep(1.0)
-        self.ax.imshow(image)
+        #self.plt.cla()
         self.ax.set_title(self.image_list[self.ind], loc='center', fontstyle='oblique', fontsize='medium')
+        self.img.set_data(self.get_resized_image_from_index(self.ind))
         plt.show()
 
     def prev(self, event):
         self.previous_ind = self.ind
         self.ind -= 1
-        #print(f"index: {self.ind}")
-        image = Image.open(self.image_list[self.ind])
-        self.plt.cla()
-        time.sleep(1.0)
+        #self.plt.cla()
         self.ax.set_title(self.image_list[self.ind], loc='center', fontstyle='oblique', fontsize='medium')
-        self.ax.imshow(image)
+        self.img.set_data(self.get_resized_image_from_index(self.ind))
         plt.show()
 
     def save(self, event):
@@ -107,6 +107,8 @@ class Annotate(object):
 
 
                 # Save image
+                img_area = (int(self.reduce_factor*img_area[0]), int(self.reduce_factor*img_area[1]),
+                            int(self.reduce_factor*img_area[2]), int(self.reduce_factor*img_area[3]))
                 img = Image.open(self.image_list[self.ind])
                 img_cropped = img.crop(img_area)
                 new_name = self.image_list[self.ind][:-4] + "_" + str(self.counter_saves_per_image) + ".JPG"
@@ -126,7 +128,7 @@ def main() -> None:
     origin_folder = base_path + '/images'
     os.chdir(origin_folder)
     image_list = []
-    for file in glob.glob("*.jpg"):
+    for file in glob.glob("*.JPG"):
         image_list.append(file)
 
     a = Annotate(image_list)
