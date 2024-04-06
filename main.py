@@ -5,9 +5,11 @@ import numpy as np
 from PIL import Image
 import glob, os
 from matplotlib.widgets import Button
+import time
 
 class Annotate(object):
     def __init__(self, image_list):
+        self.plt = plt
         self.ax = plt.gca()
         self.rect = Rectangle((0,0), 1, 1)
         self.x0 = None
@@ -24,6 +26,7 @@ class Annotate(object):
         self.area = 0
         self.area_threshold = 100
         self.counter_saves_per_image = 0
+        self.reduce_factor = 0
 
     def get_figure(self):
         return self.ax.figure
@@ -55,6 +58,8 @@ class Annotate(object):
 
         #print(f"index: {self.ind}")
         image = Image.open(self.image_list[self.ind])
+        self.plt.cla()
+        time.sleep(1.0)
         self.ax.imshow(image)
         self.ax.set_title(self.image_list[self.ind], loc='center', fontstyle='oblique', fontsize='medium')
         plt.show()
@@ -64,6 +69,8 @@ class Annotate(object):
         self.ind -= 1
         #print(f"index: {self.ind}")
         image = Image.open(self.image_list[self.ind])
+        self.plt.cla()
+        time.sleep(1.0)
         self.ax.set_title(self.image_list[self.ind], loc='center', fontstyle='oblique', fontsize='medium')
         self.ax.imshow(image)
         plt.show()
