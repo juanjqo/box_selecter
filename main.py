@@ -26,7 +26,7 @@ class Annotate(object):
         self.area = 0
         self.area_threshold = 100
         self.counter_saves_per_image = 0
-        self.reduce_factor = 1
+        self.reduce_factor = 10
         self.current_image_size = []
         self.img = self.ax.imshow(self.get_resized_image_from_index(0), aspect='auto')
         #
