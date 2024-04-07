@@ -71,9 +71,6 @@ class Annotate(object):
         self.img.set_data(self.get_resized_image_from_index(self.ind))
         self.img.set_extent((0, self.current_image_size[0], self.current_image_size[1], 0))
 
-        #self.plt.cla()
-
-        print("size:", self.current_image_size)
         plt.show()
 
     def prev(self, event):
@@ -83,8 +80,7 @@ class Annotate(object):
         self.ax.set_title(self.image_list[self.ind], loc='center', fontstyle='oblique', fontsize='medium')
         self.img.set_data(self.get_resized_image_from_index(self.ind))
         self.img.set_extent((0, self.current_image_size[0], self.current_image_size[1], 0))
-        #self.plt.cla()
-        print("size:", self.current_image_size)
+
         plt.show()
 
     def save(self, event):
@@ -117,13 +113,12 @@ class Annotate(object):
                     self.counter_saves_per_image = 1
                     self.previous_ind = self.ind
 
-                print("1. ", img_area)
+
                 # Save image
                 #img_area = (int(self.reduce_factor*img_area[0]), int(self.reduce_factor*img_area[1]),
                 #            int(self.reduce_factor*img_area[2]), int(self.reduce_factor*img_area[3]))
                 img_area = (self.reduce_factor * img_area[0], self.reduce_factor * img_area[1],
                             self.reduce_factor * img_area[2], self.reduce_factor * img_area[3])
-                print("2. ", img_area)
                 img = Image.open(self.image_list[self.ind])
 
                 img_cropped = img.crop(img_area)
